@@ -1,0 +1,15 @@
+[sauvegarde_MaisonTEST]
+positionVert = 256
+positionHoriz = 256
+tile = 151
+direction = 4
+IDinteraction = 2
+couche = 0
+
+[tasse_MaisonTESTVisuel]
+positionVert = 192
+positionHoriz = 304
+tile = 164
+direction = 4
+IDinteraction = 4
+couche = 0

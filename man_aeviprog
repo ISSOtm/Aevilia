@@ -1,0 +1,145 @@
+.\" Manpage d'AeviProg
+.TH man 6 "2 Oct. 2016" "Version 0.4.0" "Manuel de développement d'Aevilia"
+.SH NOM
+.R Manuel à destination du programmeur d'Aevilia.
+.SH ORGANISATION
+.R Le dossier "Dev" est organisé de la manière suivante :
+.TP
+.B Dossiers include, lib, objects et src
+.I Ne doivent surtout pas être renommés ou supprimés !
+.R Ils sont décrits plus bas.
+.TP
+.B Dossier jeu
+.R Contient ce qui est considéré comme le produit fini. Également décrit plus bas.
+.TP
+.B Dossier SaveIlia
+.R Contient la source du programme SaveIlia.
+.R Une fois compilé, le copier dans le dossier "jeu" pour l'utiliser.
+.TP
+.B Dossier Creation de menus
+.R Contient une page web permettant de générer des Commandes pour un menu.
+.R Pour plus d'informations sur les commandes, voir plus bas.
+.R S'il faut un mode d'emploi pour ça, dites-le moi.
+.R Il m'a l'air plutôt simple, mais je peux me tromper.
+.TP
+.B codesRetour.txt
+.R Contient des informations sur tous les codes retour que peut renvoyer Aevilia.
+.TP
+.B fonctionnalités.txt
+.R Sert à la fois de changelog et de todo list.
+.TP
+.B Makefile
+.R Permet d'utiliser make.
+.R Voir plus bas pour savoir comment s'en servir.
+.R Vous n'avez aucune idée combien ce fichier vous simplifie la vie.
+.TP
+.B man_aeviprog
+.R Votre serviteur.
+.TP
+.B publier.sh \fInumero_version
+.R Programme shell permettant de "publier" une version d'Aevilia.
+.R Appelez-le en ligne de commande comme ceci pour "publier" la version 0.4.0 :
+.R publier.sh 0.4.0
+.TP
+.B record.sh
+.R Si recordmydesktop est installé, attend trois secondes puis lance une capture vidéo de tout l'écran, qui peut être arrêtée en appuyant sur \fICtrl+P
+.SH DOSSIERS INCLUDE ET LIB
+.R Ces dossiers contiennent des ressources vitales à la compilation du projet.
+.R Merci de ne pas y toucher à moins d'être certain de ce que vous faites.
+.SH DOSSIER OBJECTS
+.R Contient des fichiers .o, qui sont des intermédiaires à la compilation.
+.R Ils sont conservés dans le but de ne recompiler que ceux qui doivent l'être.
+.R Ils peuvent donc être supprimés, mais seront recompilés de toute façon.
+.SH DOSSIER SRC
+.R Contient la source du jeu.
+.R À la racine se trouvent les fichiers principaux.
+.R Dans le dossier \fImaps \fRse trouvent les fichiers correspondant aux maps du jeu.
+.R Les fichiers .c contiennent du code, et les fichiers .spr contiennent les données des sprites sous forme texte.
+.B Attention, ces fichiers .layr et .spr sont différents des fichiers .layr et .spr contenus dans jeu/couches/ et jeu/sprites/ !
+.R Pour convertir les .spr, il faut utiliser les programmes LayrExport et SprExport, dont les sources sont LayrExport.c et SprExport.c
+.R Lancez-le en ligne de commande pour obtenir sa syntaxe.
+.R Le dossier objets contient les fichiers .h et .c correspondant aux objets du jeu.
+.SH DOSSIER JEU
+.R Ce dossier contient plus ou moins le produit fini.
+.R Les éléments principaux à la racine sont aevilia.log, aevilia.sav, Aevilia, aeviman et readme.txt
+.R Les dossiers img et sprites sont aussi considérés comme "principaux".
+.R Sont aussi présents save.txt et SaveIlia (décrits dans la section SaveIlia).
+.TP
+.B aevilia.log
+.R Fichier généré par Aevilia dès son lancement.
+.R Contient des informations sur le déroulement d'une session du jeu.
+.R En cas de problème (crash, surtout), consultez ce fichier en premier.
+.TP
+.B aevilia.sav
+.R Fichier généré par Aevilia s'il n'existe pas à son lancement.
+.R Contient les données des sauvegardes d'Aevilia sous forme binaire.
+.TP
+.B Aevilia
+.R Le jeu en lui-même !
+.R Peut être lancé depuis une invite de commande ou une GUI, voir plus bas les options en ligne de commande.
+.R Si le programme ne se lance pas, suivez ces étapes :
+.R Si aevilia.log n'est pas présent, Aevilia n'arrive pas à le créer. Trouvez pourquoi.
+.R Effacez aevilia.log
+.R Lancez Aevilia
+.R Consultez aevilia.log
+.RE
+.TP
+.B readme.txt
+.R Le readme habituel.
+.R Penser à mettre le numéro de version à jour.
+.TP
+.B img/
+.R Contient les images nécessaires au fonctionnement du jeu.
+.TP
+.B couches/
+.R Contient les fichiers .layr nécessaires au fonctionnement du jeu.
+.TP
+.B sprites/
+.R Contient les fichiers .spr nécessaires au fonctionnement du jeu.
+.B Ne pas utiliser les fichiers .spr présents dans src/maps/ !
+.R Passer par SprExport (décrit plus haut) pour convertir.
+.SH SAVEILIA
+.R Ce programme effectue une conversion de la save d'un format binaire (pratique pour le jeu) à un format texte (pratique pour un humain).
+.R Lancez-le en ligne de commande pour obtenir sa syntaxe.
+.R Attention pour l'utilisation en -o, la syntaxe est précise : "PVjoueur = 20" fonctionnera, mais "PVjoueur=20" ne fonctionnera pas !
+.R Si la lecture échoue d'une telle manière, le programme n'écrira pas cette sauvegarde ni les suivantes, et ne renverra pas d'erreur.
+.SH UTILISER MAKE
+.R make est à utiliser dans le répertoire Dev, à la racine (le fichier Makefile devrait être présent).
+.R Voici la liste des règles spéciales :
+.TP
+.B all \fR(directive par défaut)
+.R Compile tout ce qui est nécessaire à l'exécutable, y compris l'exécutable.
+.TP
+.B clean
+.R Nettoie tous les fichiers intermédiaires.
+.TP
+.B dist
+.R Génère Aevilia.tar.gz dans le dossier Dev.
+.R Note : utilisez publier.sh ensuite.
+.TP
+.B mrproper
+.R Nettoie tous les fichiers intermédiaires et finaux.
+.TP
+.B rebuild
+.R Reconstruit tous les fichiers finaux.
+.TP
+.B sprites
+.R Compile tous les fichiers de sprites.
+.TP
+.B Aevilia
+.R Compile l'exécutable.
+.TP
+.B SaveIlia
+.R Compile SaveIlia, dans le dossier Dev/SaveIlia : il faut transférer manuellement dans le dossier Dev/jeu si on veut directement travailler avec aevilia.sav !
+.SH OPTIONS EN LIGNE DE COMMANDE
+.R Toutes les options peuvent être omises, et présentes dans n'importe quel ordre.
+.TP
+.B -d
+.R Active le debug (présente uniquement si le jeu a été compilé avec la macro PRODUCTION non définie.
+.TP
+.B -g
+.R Force le jeu à ignorer l'accélération matérielle.
+.SH AUTEURS
+.TR
+.R ISSOtm (\fIeldredhabert0@gmail.com\fR)
+.R Auteur, développeur (juillet 2016 - novembre 2016)

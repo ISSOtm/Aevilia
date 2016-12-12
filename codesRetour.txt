@@ -1,0 +1,77 @@
+
+LISTE DES CODES DE RETOUR
+
+Note initiale :
+ * 0 signife tout va bien
+ * -1 signifie "Bonne chance msieur le débuggeur !". Cf son entrée plus bas.
+ * Le reste signifie "Erreur bien identifiée". Je précise que les codes ne sont pas classés par "dangerosité", c'est juste l'ordre dans lequel je les ai ajoutés.
+
+
+0  : Succès.
+Signale que tout s'est bien passé.
+
+1  : Erreur d'ouverture du log
+Signale que le log n'a pas pu être ouvert.
+Fonction : initialiser()
+
+2  : Erreur de fermeture du log
+Signale que le log n'a pas été fermé correctement.
+Si cette erreur arrive, le précédent code retour est imprimé sur la sortie standard pour éviter les écrasements chiants pour les débugueurs.
+Fonction : terminer()
+
+3  : Erreur d'écriture du log
+Signale que la fonction logger() a rencontré un problème à l'écriture d'un message.
+Comme plusieurs erreurs tentent de logger le problème, cette erreur écrase le précédent code de retour.
+Afin de débugger correctement le programme, veillez à ce que RIEN ne bloque l'édition du fichier pendant l'exécution du jeu !
+Fonction : logger()
+Macros : LOGGER, DIRE, etc.
+
+4  : Erreur d'initialisation de la SDL
+Apparaît quand SDL_Init() échoue. Tente de logger SDL_GetError().
+Fonction : initialiserGraphismes()
+
+5  : Erreur d'ouverture de la fenêtre
+Apparaît quand SDL_CreateWindow() échoue. Tente de logger SDL_GetError().
+Fonction : initialiserGraphismes()
+
+6  : Erreur de création du SDL_Renderer
+Apparaît quand SDL_CreateRenderer() échoue. Tente de logger SDL_GetError().
+Fonction : initialiserGraphismes()
+
+7  : Erreur de chargement d'une image
+Apparaît quand chargerImage() échoue. Logge le chemin que le jeu a tenté de charger.
+Fonction : chargerImage()
+
+8  : Erreur d'initialisation du timer des frames
+Apparaît quand SDL_AddTimer(...) échoue. Logge SDL_GetError().
+Fonction : initialiser()
+
+9  : SIGSEGV
+Apparaît quand le signal SIGSEGV est généré. Duh.
+Fonction : j'en sais rien !
+
+10 : Erreur d'accès aux sauvegardes
+Apparaît quand une sauvegarde invalide tente d'être utilisée.
+Fonctions : mettreAjourSauvegarde() et decompresserSauvegarde()
+
+11 : Erreur de chargement des sauvegardes
+Apparaît quand le fichier de sauvegardes est inaccessible.
+Fonction : charger()
+
+12 : Erreur de chargement des sprites
+Apparaît quand le jeu tente d'accéder à un fichier de sprites inexistant. Logge le chemin que le jeu a tenté d'ouvrir.
+Fonction
+
+13 : Erreur de chargement d'une couche
+Apparaît quand le jeu tente d'accéder à un fichier de couche inexistant. Logge le chemin que le jeu a tenté d'ouvrir.
+
+14 : Erreur d'ouverture d'un fichier
+Apparaît quand le jeu tente d'ouvrir un fichier inexistant. Logge le chemin que le jeu a tenté d'ouvrir.
+Fonction : chargerFichier()
+
+
+
+-1  : Erreur inconnue.
+Là, niveau emmerdes, sur une échelle de 1 à 10, on est à plus de 9000. Traduction : on est tellement dans la merde qu'on a aucune idée de ce qui a planté. Bon courage pour la débugger, celle-là.
+Fonctions : prie pour qu'il n'y en ait pas.
+

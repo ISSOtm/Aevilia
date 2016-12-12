@@ -1,0 +1,720 @@
+--------------------------------------------------------------------------------
+I1 cache:         32768 B, 64 B, 8-way associative
+D1 cache:         32768 B, 64 B, 8-way associative
+LL cache:         6291456 B, 64 B, 12-way associative
+Command:          /home/issotm/Dropbox/Aevilia/Dev/jeu/Aevilia
+Data file:        cachegrind_1.txt
+Events recorded:  Ir I1mr ILmr Dr D1mr DLmr Dw D1mw DLmw
+Events shown:     D1mr DLmr D1mw DLmw
+Event sort order: D1mr DLmr D1mw DLmw
+Thresholds:       0.1 100 100 100
+Include dirs:     
+User annotated:   /home/issotm/Dropbox/Aevilia/Dev/src/moteur_graphique.c
+Auto-annotation:  off
+
+--------------------------------------------------------------------------------
+       D1mr   DLmr       D1mw    DLmw 
+--------------------------------------------------------------------------------
+173,319,934 98,296 51,475,556 286,123  PROGRAM TOTALS
+
+--------------------------------------------------------------------------------
+       D1mr   DLmr       D1mw    DLmw  file:function
+--------------------------------------------------------------------------------
+139,939,544 48,096 46,869,987  50,954  ???:???
+ 10,757,947     17          0       0  /build/glibc-uPj9cH/glibc-2.19/string/../sysdeps/x86_64/multiarch/memcmp-sse4.S:__memcmp_sse4_1
+  5,743,680      1     11,910       0  /home/issotm/Dropbox/Aevilia/Dev/src/moteur_graphique.c:afficherTile
+  4,814,257  1,322  1,528,597   1,164  /build/glibc-uPj9cH/glibc-2.19/string/../sysdeps/x86_64/multiarch/memcpy-sse2-unaligned.S:__memcpy_sse2_unaligned
+  4,050,201      7          0       0  /build/glibc-uPj9cH/glibc-2.19/nptl/../nptl/sysdeps/unix/sysv/linux/x86/elision-lock.c:__lll_lock_elision
+  3,786,880     55          0       0  /build/glibc-uPj9cH/glibc-2.19/nptl/../nptl/pthread_mutex_lock.c:pthread_mutex_lock
+    869,616    272          0       0  /home/issotm/Dropbox/Aevilia/Dev/src/moteur_graphique.c:rendreMap
+    856,050      0          0       0  ???:drm_intel_bufmgr_check_aperture_space
+    522,095  2,682      3,272      23  /build/glibc-uPj9cH/glibc-2.19/elf/dl-lookup.c:do_lookup_x
+    360,520  3,801     18,190     281  /build/glibc-uPj9cH/glibc-2.19/malloc/malloc.c:_int_free
+
+--------------------------------------------------------------------------------
+-- User-annotated source: /home/issotm/Dropbox/Aevilia/Dev/src/moteur_graphique.c
+--------------------------------------------------------------------------------
+     D1mr DLmr   D1mw DLmw 
+
+-- line 35 ----------------------------------------
+        .    .      .    .  Menu barreEtat =	{.positionVert = HAUTEUR_FENETRE - NB_TILES_BARRE_ETAT * HAUTEUR_TILE,
+        .    .      .    .  					 .positionHoriz = 0,
+        .    .      .    .  					 .tailleVert = NB_TILES_BARRE_ETAT - 2,
+        .    .      .    .  					 .tailleHoriz = NB_TILES_LARG - 2,
+        .    .      .    .  					 .texte = L"   NOMJOUEUR \1   Niv 00 000/000 PV",
+        .    .      .    .  					 .nbCharsArendre = LONG_TEXTE_MENU - 1}; // On rend le texte instantané.
+        .    .      .    .  					 
+        .    .      .    .  
+        0    0      0    0  void initialiserGraphismes(void) {
+        .    .      .    .  	
+        .    .      .    .  	// On initialise la SDL
+        0    0      0    0  	LOGGER("Initialisation de la SDL...")
+        0    0      0    0  	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER)) {
+        .    .      .    .  		ERROR("La SDL n'a pas pu s'initialiser !")
+        .    .      .    .  		FATALERROR(SDL_GetError(), ERREUR_INIT_SDL)
+        .    .      .    .  	}
+        .    .      .    .  	
+        0    0      0    0  	LOGGER("Initialisation terminée.")
+        .    .      .    .  	
+        .    .      .    .  	// On crée la fenêtre
+        0    0      0    0  	LOGGER("Création de la fenêtre...")
+        0    0      1    1  	pFenetre = SDL_CreateWindow("Aevilia version 0.4.0", SDL_WINDOWPOS_UNDEFINED,
+        .    .      .    .  														 SDL_WINDOWPOS_UNDEFINED,
+        .    .      .    .  														 LARGEUR_FENETRE,
+        .    .      .    .  														 HAUTEUR_FENETRE,
+        .    .      .    .  														 SDL_WINDOW_SHOWN);
+        .    .      .    .  	// NULL signifie une erreur. On va ptêtre éviter la segfault :)
+        0    0      0    0  	if(pFenetre == NULL) {
+        .    .      .    .  		ERROR("La fenêtre n'a pas pu être ouverte !")
+        .    .      .    .  		FATALERROR(SDL_GetError(), ERREUR_CREATION_FENETRE)
+        .    .      .    .  	}
+        .    .      .    .  	
+        0    0      0    0  	LOGGER("Création du rendu...")
+        .    .      .    .  	// On tente de créer le SDL_Renderer
+        1    1      1    1  	pRendu = SDL_CreateRenderer(pFenetre, -1, FLAG(DESACTIVER_ACCEL_GPU) ? SDL_RENDERER_SOFTWARE : SDL_RENDERER_ACCELERATED);
+        .    .      .    .  	// NULL signifie une erreur. On va ptêtre éviter la redite :)
+        0    0      0    0  	if(pRendu == NULL) {
+        .    .      .    .  		// Pour les cas où l'accélération matérielle n'est pas supportée.
+        .    .      .    .  		pRendu = SDL_CreateRenderer(pFenetre, -1, SDL_RENDERER_SOFTWARE);
+        .    .      .    .  		if(pRendu == NULL) {
+        .    .      .    .  			ERROR("Le rendu n'a pas pu être créé !")
+        .    .      .    .  			FATALERROR(SDL_GetError(), ERREUR_CREATION_RENDU)
+        .    .      .    .  		} else {
+        .    .      .    .  			WARN("L'accélération matérielle n'est pas supportée. Un rendu logiciel est utilisé.")
+        .    .      .    .  			fprintf(fichierLog, SDL_GetError());
+        .    .      .    .  		}
+        .    .      .    .  	}
+        0    0      0    0  	LOGGER("Rendu créé.")
+        .    .      .    .  #ifndef PRODUCTION
+        .    .      .    .  	#define COULEUR_FOND	255, 0, 0
+        .    .      .    .  #else
+        .    .      .    .  	#define COULEUR_FOND	0, 0, 0
+        .    .      .    .  #endif
+        0    0      0    0  	if(SDL_SetRenderDrawColor(pRendu, COULEUR_FOND, 255)) { // Retourne 0 si tout va bien.
+        .    .      .    .  		WARN("Le nettoyage de l'écran ne peut pas s'effectuer !")
+        .    .      .    .  		DIRE("Le jeu va quand même tenter de s'exécuter, mais des bugs graphiques sont possibles.")
+        .    .      .    .  	} else {
+        0    0      0    0  		LOGGER("Nettoyage de l'écran prédéfini.")
+        .    .      .    .  	}
+        .    .      .    .  	
+        0    0      0    0  	LOGGER("Chargement du fichier de tiles...")
+        0    0      0    0  	if(chargerImage("tiles.bmp", &imgTiles) != SUCCES) {
+        .    .      .    .  		FATALERROR("Échec du chargement d'une ressource critique. Arrêt.", ERREUR_CHARGEMENT_IMAGE)
+        .    .      .    .  	}
+        0    0      0    0  	LOGGER("Chargement terminé.")
+        .    .      .    .  	
+        0    0      0    0  	pousserScript(PLEIN_ECRAN, pleinEcran);
+        .    .      .    .  	
+        0    0      0    0  	LOGGER("Le chargement des graphismes est terminé.")
+        0    0      0    0  }
+        .    .      .    .  
+        .    .      .    .  // Veuillez (sauf si le contraire est requis) nettoyer dans l'ordre inverse du chargement !
+        0    0      0    0  void nettoyerGraphismes(void) {
+        .    .      .    .  	dechargerImage(&imgTiles);
+        .    .      .    .  	
+        1    0      0    0  	if(pRendu) {
+        0    0      0    0  		SDL_DestroyRenderer(pRendu);
+        .    .      .    .  	}
+        .    .      .    .  	
+        1    0      0    0  	if(pFenetre) {
+        0    0      0    0  		SDL_DestroyWindow(pFenetre);
+        .    .      .    .  	}
+        .    .      .    .  	
+        0    0      0    0  	SDL_Quit();
+        0    0      0    0  }
+        .    .      .    .  
+        .    .      .    .  
+        0    0      0    0  CodeRetour chargerImage(const char nom[], Image* img) {
+        .    .      .    .  	SDL_Surface* tempSurface = NULL;
+        0    0      0    0  	LOGGER("Chargement du fichier img/")
+        0    0      0    0  	fprintf(fichierLog, nom);
+        .    .      .    .  	
+        0    0      1    1  	strcpy(img->cheminNom, "img/");
+        0    0      0    0  	strncpy(img->cheminNom + 4 * sizeof(char), nom, FILENAME_MAX - 4 * sizeof(char) - 1);
+        .    .      .    .  	
+        0    0      0    0  	tempSurface = SDL_LoadBMP(img->cheminNom);
+        0    0      0    0  	if(!tempSurface) {
+        .    .      .    .  		ERROR("Erreur de création de la surface. Fichier :")
+        .    .      .    .  		fprintf(fichierLog, nom);
+        .    .      .    .  		ERROR(SDL_GetError())
+        .    .      .    .  		return ERREUR_CHARGEMENT_IMAGE;
+        .    .      .    .  	}
+        .    .      .    .  	
+        1    0      1    1  	img->texture = SDL_CreateTextureFromSurface(pRendu, tempSurface);
+        0    0      0    0  	if(!img->texture) {
+        .    .      .    .  		ERROR("Erreur de création de la texture. Fichier :")
+        .    .      .    .  		fprintf(fichierLog, nom);
+        .    .      .    .  		ERROR(SDL_GetError())
+        .    .      .    .  		return ERREUR_CHARGEMENT_IMAGE;
+        .    .      .    .  	}
+        .    .      .    .  	
+        0    0      0    0  	SDL_FreeSurface(tempSurface);
+        .    .      .    .  	
+        0    0      0    0  	return SUCCES;
+        0    0      0    0  }
+        .    .      .    .  
+        .    .      .    .  void dechargerImage(Image* img) {
+        0    0      0    0  	if(img->texture) {
+        0    0      0    0  		LOGGER("Déchargement du fichier ")
+        0    0      0    0  		fprintf(fichierLog, img->cheminNom);
+        .    .      .    .  		
+        0    0      0    0  		SDL_DestroyTexture(img->texture);
+        .    .      .    .  		
+        .    .      .    .  		// On évite le use-after-free ?
+        0    0      0    0  		img->texture = NULL;
+        .    .      .    .  	}
+        .    .      .    .  }
+        .    .      .    .  
+        .    .      .    .  
+        .    .      .    .  wchar_t obtenirNumeroTile(unsigned int positionVert, unsigned int positionHoriz, const Couche* couche) {
+        .    .      .    .  	// Émule un tableau 2D avec un tableau 1D ; comme ça, on peut moduler les tailles maximales et optimiser l'utilsation mémoire.
+        0    0      0    0  	__builtin_prefetch(&couche->largeur, 1);
+  183,594    0      0    0  	if(positionVert >= couche->hauteur || positionHoriz >= couche->largeur) {
+        0    0      0    0  		return TRANSPARENT_BLOQUE;
+        .    .      .    .  	}
+  638,562  272      0    0  	return couche->tilemap[positionVert * couche->largeur + positionHoriz];
+        0    0      0    0  }
+        .    .      .    .  
+        .    .      .    .  void modifierNumeroTile(unsigned int positionVert, unsigned int positionHoriz, Couche* couche, wchar_t tile) {
+        2    0      0    0  	if(positionHoriz < couche->largeur && positionVert < couche->hauteur) {
+        0    0      3    0  		couche->tilemap[positionVert * couche->largeur + positionHoriz] = tile;
+        .    .      .    .  	}
+        .    .      .    .  }
+        .    .      .    .  
+        .    .      .    .  void ciblerTile(wchar_t numero, SDL_Rect* rectangle) {
+        .    .      .    .  	// tiles.bmp est organisé comme suit :
+        .    .      .    .  	// Une ligne correspond à une tile et comprend ses frames successives, alignées horizontalement.
+        0    0      0    0  	rectangle->y = numero * HAUTEUR_TILE; // On recherche la ligne (c'est simple)...
+  481,058    0      0    0  	rectangle->x = attributsTiles[numero]->frame * LARGEUR_TILE; // ...et on recherche la colonne (dépend de la frame).
+        .    .      .    .  }
+        .    .      .    .  
+        0    0      0    0  void rendreCopie(const SDL_Rect* rectSource, const SDL_Rect* rectDest) {
+   38,549    0 12,017    0  	SDL_Rect rDest = {rectDest->x * taillePixel, rectDest->y * taillePixel, rectDest->w * taillePixel, rectDest->h * taillePixel};
+2,380,998    0      0    0  	if(FLAG(PLEIN_ECRAN_ACTIF)) {
+        .    .      .    .  		rDest.x += boiteHoriz;
+        .    .      .    .  		rDest.y += boiteVert;
+        .    .      .    .  	}
+        .    .      .    .  	
+  839,613    0      0    0  	SDL_RenderCopy(pRendu, imgTiles.texture, rectSource, &rDest);
+   36,998    0      0    0  }
+        .    .      .    .  
+        0    0      0    0  void rendrePresent(void) {
+    1,491    0      0    0  	if(!FLAG(DESSINER_BOITE)) {
+        0    0      0    0  		if(boiteVert != 0) {
+        .    .      .    .  			SDL_Rect rectSource = TILE(0, NOIR * HAUTEUR_TILE);
+        .    .      .    .  			SDL_Rect rectDest   = {-boiteHoriz, -boiteVert, affichage.w, boiteVert};
+        .    .      .    .  			rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  			rectDest.y += HAUTEUR_FENETRE + rectDest.h;
+        .    .      .    .  			rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  		}
+        0    0      0    0  		if(boiteHoriz != 0) {
+        .    .      .    .  			SDL_Rect rectSource = TILE(0, NOIR * HAUTEUR_TILE);
+        .    .      .    .  			SDL_Rect rectDest   = {-boiteHoriz, -boiteVert, boiteHoriz, affichage.h};
+        .    .      .    .  			rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  			rectDest.x += LARGEUR_FENETRE + rectDest.w;
+        .    .      .    .  			rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  		}
+        .    .      .    .  	}
+      561    0  1,244    0  	SDL_RenderPresent(pRendu);
+    2,632    0      0    0  }
+        .    .      .    .  
+        .    .      .    .  void afficherRect(const SDL_Rect* rectSource, unsigned int positionVert, unsigned int positionHoriz) {
+        .    .      .    .  	SDL_Rect rectDest = TILE(positionHoriz, positionVert);	
+        .    .      .    .  	
+        .    .      .    .  	rendreCopie(rectSource, &rectDest);
+        .    .      .    .  }
+        .    .      .    .  
+        0    0      2    0  void afficherTile(wchar_t numero, unsigned int positionVert, unsigned int positionHoriz) {
+  492,027    1      0    0  	ModeRendu modeRendu		= transparences[numero]->modeRendu;
+        .    .      .    .  	
+        .    .      .    .  	// S'il n'y a pas de transparence à appliquer, on rend la tile entière direct.
+        .    .      .    .  #ifndef PRODUCTION
+   29,436    0      0    0  	if(modeRendu == OPAQUE || (__DEBUG__debuggerCouches != 0 && numero == TRANSPARENT_BLOQUE)) {
+        .    .      .    .  #else
+        .    .      .    .  	if(modeRendu == OPAQUE) {
+        .    .      .    .  #endif
+        0    0      0    0  		SDL_Rect rectSource = {0, 0, LARGEUR_TILE, HAUTEUR_TILE};
+        .    .      .    .  		ciblerTile(numero, &rectSource);
+        .    .      .    .  		
+        .    .      .    .  		afficherRect(&rectSource, positionVert, positionHoriz);
+        .    .      .    .  		return;
+        .    .      .    .  #ifndef PRODUCTION
+        0    0      0    0  	} else if(modeRendu == TRANSPARENT) { // Pour aligner les accolades pour la coloration de gedit.
+        .    .      .    .  #else
+        .    .      .    .  	} else if(modeRendu == TRANSPARENT) {
+        .    .      .    .  #endif
+        .    .      .    .  		return;
+        .    .      .    .  	}
+        .    .      .    .  	
+        .    .      .    .  	// Tableau de masques de rendu. Supportent du 32 pixels de large au max.
+   88,404    0      0    0  	unsigned int* masques	= *transparences[numero]->transparence[attributsTiles[numero]->frame];
+        .    .      .    .  	unsigned int masque;
+        .    .      .    .  	
+        .    .      .    .  	unsigned int ligne		= 0;
+        .    .      .    .  	unsigned int colonne;
+        .    .      .    .  	
+        .    .      .    .  	SDL_Rect rectDest		= {positionHoriz, positionVert, 0, 1};
+        0    0      0    0  	SDL_Rect rectSource		= {0, 0, 0, 1};
+        .    .      .    .  	ciblerTile(numero, &rectSource);
+        .    .      .    .  	unsigned int vert		= rectSource.x;
+        .    .      .    .  	
+        0    0      0    0  	if(modeRendu == MOITIE_GAUCHE) {
+        0    0      0    0  		rectSource.w = LARGEUR_TILE / 2;
+        0    0      0    0  		rectSource.h = HAUTEUR_TILE;
+        .    .      .    .  		rectDest.w = LARGEUR_TILE / 2;
+        .    .      .    .  		rectDest.h = HAUTEUR_TILE;
+        .    .      .    .  		
+        .    .      .    .  		rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  		
+        0    0      0    0  		rectSource.w = 1;
+        0    0      0    0  		rectSource.h = 1;
+        .    .      .    .  		rectDest.w = 0;
+        .    .      .    .  		rectDest.h = 1;
+        0    0      0    0  	} else if(modeRendu == MOITIE_DROITE) {
+        0    0      0    0  		rectSource.x += LARGEUR_TILE / 2;
+        0    0      0    0  		rectSource.w = LARGEUR_TILE / 2;
+        0    0      0    0  		rectSource.h = HAUTEUR_TILE;
+        0    0      0    0  		rectDest.x = positionHoriz + LARGEUR_TILE / 2;
+        .    .      .    .  		rectDest.w = LARGEUR_TILE / 2;
+        .    .      .    .  		rectDest.h = HAUTEUR_TILE;
+        .    .      .    .  		
+        .    .      .    .  		rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  		
+        0    0      0    0  		rectSource.x -= LARGEUR_TILE / 2;
+        0    0      0    0  		rectSource.w = 1;
+        0    0      0    0  		rectSource.h = 1;
+        .    .      .    .  		rectDest.w = 0;
+        .    .      .    .  		rectDest.h = 1;
+        .    .      .    .  	}
+        .    .      .    .  	
+        .    .      .    .  	// On va afficher chaque ligne avec son masque, pixel à pixel.
+        0    0      0    0  	for( ; ligne < HAUTEUR_TILE && rectDest.y < HAUTEUR_FENETRE; ligne++) {
+  121,269    0      0    0  		masque = masques[ligne];
+        .    .      .    .  		
+        0    0      0    0  		if(masque != 0x0000 && rectDest.y >= 0) {
+        0    0      0    0  			rectDest.x = positionHoriz;
+        0    0      0    0  			rectSource.x = vert;
+        .    .      .    .  			
+        0    0      0    0  			if(modeRendu == MOITIE_GAUCHE) {
+        0    0      0    0  				masque <<= 8;
+        0    0      0    0  				rectSource.x += LARGEUR_TILE / 2;
+        0    0      0    0  				rectDest.x += LARGEUR_TILE / 2;
+        .    .      .    .  			}
+        .    .      .    .  		
+        0    0      0    0  			for(colonne = 0; colonne < ((modeRendu == MOITIE_GAUCHE || modeRendu == MOITIE_DROITE) ? LARGEUR_TILE / 2 : LARGEUR_TILE) ; colonne++) {
+        .    .      .    .  				// Si le pixel n'est pas transparent,
+        0    0      0    0  				if(masque & 0x8000 && rectDest.x >= 0) {
+        0    0      0    0  					rectDest.w++;
+        0    0      0    0  					rectSource.w++;
+        .    .      .    .  				} else {
+        0    0      0    0  					if(rectDest.w) {
+        .    .      .    .  						rendreCopie(&rectSource, &rectDest);
+        0    0      0    0  						rectDest.x += rectDest.w;
+      163    0      0    0  						rectSource.x += rectDest.w;
+        .    .      .    .  						rectDest.w = 0;
+        0    0      0    0  						rectSource.w = 0;
+        .    .      .    .  					}
+        0    0      0    0  					rectDest.x++;
+        0    0      0    0  					rectSource.x++;
+        .    .      .    .  				}
+        .    .      .    .  		
+        0    0      0    0  				masque <<= 1;
+        .    .      .    .  			}
+        .    .      .    .  			
+        0    0      0    0  			if(rectDest.w) {
+        .    .      .    .  				rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  				rectDest.w = 0;
+        0    0      0    0  				rectSource.w = 0;
+        .    .      .    .  			}
+        .    .      .    .  		}
+        .    .      .    .  		
+        .    .      .    .  		rectDest.y++;
+        0    0      0    0  		rectSource.y++;
+        .    .      .    .  	}
+1,438,890    0      0    0  }
+        .    .      .    .  
+        .    .      .    .  // Attention : les positions sont en pixels...
+        .    .      .    .  void rendreBackground(unsigned int positionVert, unsigned int positionHoriz, const Couche* couche) {
+        0    0      0    0  	unsigned int positionVertLecture0	= positionVert / HAUTEUR_TILE;
+        0    0      0    0  	unsigned int positionHorizLecture0	= positionHoriz / LARGEUR_TILE;
+        .    .      .    .  	
+        0    0      0    0  	unsigned int nbPixelsDecalageVert	= positionVert % HAUTEUR_TILE;
+        0    0      0    0  	unsigned int nbPixelsDecalageHoriz	= positionHoriz % LARGEUR_TILE;
+        .    .      .    .  	
+        .    .      .    .  	unsigned int curseurVert = 0;
+        .    .      .    .  	unsigned int curseurHoriz;
+        .    .      .    .  	
+        0    0      0    0  	for( ; curseurVert <= (FLAG(AFFICHER_BARRE_ETAT) ? NB_TILES_HAUT - NB_TILES_BARRE_ETAT : NB_TILES_HAUT); curseurVert++) {
+    3,538    0      0    0  		for(curseurHoriz = 0; curseurHoriz <= NB_TILES_LARG; curseurHoriz++) {
+        .    .      .    .  			wchar_t numeroTile = obtenirNumeroTile(positionVertLecture0 + curseurVert, positionHorizLecture0 + curseurHoriz, couche);
+        .    .      .    .  			
+        0    0      0    0  			afficherTile(numeroTile, curseurVert * HAUTEUR_TILE - nbPixelsDecalageVert, curseurHoriz * LARGEUR_TILE - nbPixelsDecalageHoriz);
+        .    .      .    .  		}
+        .    .      .    .  	}
+        .    .      .    .  }
+        .    .      .    .  
+        .    .      .    .  void rendreSprite(const Sprite* sprite) {
+        .    .      .    .  #ifndef PRODUCTION
+    8,738    0      0    0  	if(__DEBUG__debuggerSprites != 0) {
+        .    .      .    .  		SDL_Rect rectSource	= TILE(LARGEUR_TILE, HAUTEUR_TILE);
+        .    .      .    .  		SDL_Rect rectDest	= TILE(sprite->positionHoriz - positionHorizCamera, sprite->positionVert - positionVertCamera);
+        .    .      .    .  		rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  		return;
+        .    .      .    .  	}
+        .    .      .    .  #endif
+    3,919    0      0    0  	if(positionVertCamera + 1 <= sprite->positionVert + HAUTEUR_TILE && positionHorizCamera + 1 <= sprite->positionHoriz + LARGEUR_TILE && sprite->tile > TRANSPARENT_MARCHE) {
+        0    0      0    0  		afficherTile(sprite->tile + ((sprite->direction < VALIDER) ? sprite->direction : 0), sprite->positionVert - positionVertCamera, sprite->positionHoriz - positionHorizCamera);
+        .    .      .    .  	}
+        .    .      .    .  }
+        .    .      .    .  
+        0    0      0    0  void rendreMap(unsigned int positionVert, unsigned int positionHoriz) {
+        .    .      .    .  	unsigned int numCouche = 0;
+        .    .      .    .  	unsigned int numSprite;
+        .    .      .    .  	
+      269    0      0    0  	SDL_RenderClear(pRendu);
+    1,244    0      0    0  	for( ; numCouche < enTeteMapCourante.nbCouches && numCouche < NB_COUCHES_MAX; numCouche++) {
+        .    .      .    .  #ifndef PRODUCTION
+    2,391    0      0    0  		if((__DEBUG__debuggerCouches == 0 || __DEBUG__couches[numCouche] != NULL)) {
+        .    .      .    .  			rendreBackground(positionVert, positionHoriz, &couchesMapCourante[numCouche]);
+   10,290    0      0    0  			for(numSprite = 0; numSprite <= enTeteMapCourante.nbSprites && numSprite < NB_SPRITES_MAX + 1; numSprite++) {
+        .    .      .    .  				Sprite* sprite = &spritesMapCourante[numSprite];
+   14,846    0      0    0  				if(sprite->couche == numCouche) {
+        .    .      .    .  					rendreSprite(sprite);
+        .    .      .    .  				}
+        .    .      .    .  			}
+        .    .      .    .  		}
+        .    .      .    .  #else
+        .    .      .    .  		rendreBackground(positionVert, positionHoriz, &couchesMapCourante[numCouche]);
+        .    .      .    .  		for(numSprite = 0; numSprite <= enTeteMapCourante->nbSprites && numSprite < NB_SPRITES_MAX; numSprite++) {
+        .    .      .    .  			Sprite* sprite = spritesMapCourante[numSprite];
+        .    .      .    .  			if(sprite->couche == numCouche) {
+        .    .      .    .  				rendreSprite(sprite);
+        .    .      .    .  			}
+        .    .      .    .  		}
+        .    .      .    .  #endif
+        .    .      .    .  	}
+    2,487    0      0    0  }
+        .    .      .    .  
+    1,216    0      0    0  void animer(void) {
+        .    .      .    .  	int numAnim;
+        .    .      .    .  	AttribTile* attr;
+        .    .      .    .  	
+        .    .      .    .  	for(numAnim = 0; numAnim < NB_ANIMATIONS; numAnim++) {
+    1,244    0      0    0  		attr = animations[numAnim];
+       41    0      0    0  		if(IDframe % attr->freqAnim == 0) {
+        0    0      0    0  			if(attr->frame == attr->frameMax) {
+        0    0      0    0  				attr->frame = 0;
+        0    0      0    0  			} else if(attr->frame < attr->frameMax) {
+        0    0      0    0  				attr->frame++;
+        .    .      .    .  			}
+        .    .      .    .  		}
+        .    .      .    .  	}
+        .    .      .    .  }
+        .    .      .    .  
+        .    .      .    .  #ifndef PRODUCTION
+        0    0      0    0  void afficherInfosDebug(void) {
+        .    .      .    .  #define AFFTILE(nb, vert, horiz)	afficherTile(nb, vert * HAUTEUR_TILE, LARGEUR_FENETRE - horiz * LARGEUR_TILE);
+        0    0      1    0  	AFFTILE(' ', 0, 8)
+    1,244    0      0    0  	AFFTILE((fps < 100) ? ' ' : (fps / 100 + '0'), 0, 7)
+    1,244    0      0    0  	AFFTILE(fps % 100 / 10 + '0', 0, 6)
+    1,244    0      0    0  	AFFTILE(fps % 10 + '0', 0, 5)
+        0    0      0    0  	AFFTILE(' ', 0, 4)
+        0    0      0    0  	AFFTILE('F', 0, 3)
+        0    0      0    0  	AFFTILE('P', 0, 2)
+        0    0      0    0  	AFFTILE('S', 0, 1)
+        .    .      .    .  	
+        0    0      0    0  	AFFTILE('L', 1, 8)
+        0    0      0    0  	AFFTILE('A', 1, 7)
+        0    0      0    0  	AFFTILE('Y', 1, 6)
+        0    0      0    0  	AFFTILE('E', 1, 5)
+        0    0      0    0  	AFFTILE('R', 1, 4)
+        0    0      0    0  	AFFTILE(' ', 1, 3)
+    1,244    0      0    0  	AFFTILE(coucheJoueur / 10 + '0', 1, 2)
+    1,244    0      0    0  	AFFTILE(coucheJoueur % 10 + '0', 1, 1)
+        .    .      .    .  	
+        0    0      0    0  	AFFTILE('X', 2, 8)
+        0    0      0    0  	AFFTILE('P', 2, 7)
+        0    0      0    0  	AFFTILE('L', 2, 6)
+        0    0      0    0  	AFFTILE('A', 2, 5)
+        0    0      0    0  	AFFTILE('Y', 2, 4)
+    1,244    0      0    0  	AFFTILE(positionHorizJoueur / 100 + '0', 2, 3)
+       12    0      0    0  	AFFTILE(positionHorizJoueur % 100 / 10 + '0', 2, 2)
+        6    0      0    0  	AFFTILE(positionHorizJoueur % 10 + '0', 2, 1)
+        .    .      .    .  	
+        0    0      0    0  	AFFTILE('Y', 3, 8)
+        0    0      0    0  	AFFTILE('P', 3, 7)
+        0    0      0    0  	AFFTILE('L', 3, 6)
+        0    0      0    0  	AFFTILE('A', 3, 5)
+        0    0      0    0  	AFFTILE('Y', 3, 4)
+    1,244    0      0    0  	AFFTILE(positionVertJoueur / 100 + '0', 3, 3)
+       37    0      0    0  	AFFTILE(positionVertJoueur % 100 / 10 + '0', 3, 2)
+       38    0      0    0  	AFFTILE(positionVertJoueur % 10 + '0', 3, 1)
+        .    .      .    .  	
+        0    0      0    0  	AFFTILE('X', 4, 8)
+        0    0      0    0  	AFFTILE('C', 4, 7)
+        0    0      0    0  	AFFTILE('A', 4, 6)
+        0    0      0    0  	AFFTILE('M', 4, 5)
+        0    0      0    0  	AFFTILE(' ', 4, 4)
+      939    0      0    0  	AFFTILE(positionHorizCamera / 100 + '0', 4, 3)
+        9    0      0    0  	AFFTILE(positionHorizCamera % 100 / 10 + '0', 4, 2)
+       12    0      0    0  	AFFTILE(positionHorizCamera % 10 + '0', 4, 1)
+        .    .      .    .  	
+        0    0      0    0  	AFFTILE('Y', 5, 8)
+        0    0      0    0  	AFFTILE('C', 5, 7)
+        0    0      0    0  	AFFTILE('A', 5, 6)
+        0    0      0    0  	AFFTILE('M', 5, 5)
+        0    0      0    0  	AFFTILE(' ', 5, 4)
+        4    0      0    0  	AFFTILE(positionVertCamera / 100 + '0', 5, 3)
+        4    0      0    0  	AFFTILE(positionVertCamera % 100 / 10 + '0', 5, 2)
+        7    0      0    0  	AFFTILE(positionVertCamera % 10 + '0', 5, 1)
+        .    .      .    .  	
+        0    0      0    0  	AFFTILE('D', 6, 8)
+        0    0      0    0  	AFFTILE('I', 6, 7)
+        0    0      0    0  	AFFTILE('R', 6, 6)
+        0    0      0    0  	AFFTILE('P', 6, 5)
+        0    0      0    0  	AFFTILE('L', 6, 4)
+        0    0      0    0  	AFFTILE('A', 6, 3)
+        0    0      0    0  	AFFTILE('Y', 6, 2)
+    1,244    0      0    0  	AFFTILE(direction + '0', 6, 1)
+        .    .      .    .  	
+        0    0      0    0  	AFFTILE('M', 7, 8)
+        0    0      0    0  	AFFTILE('A', 7, 7)
+        0    0      0    0  	AFFTILE('P', 7, 6)
+        0    0      0    0  	AFFTILE('I', 7, 5)
+        0    0      0    0  	AFFTILE('D', 7, 4)
+    1,244    0      0    0  	AFFTILE(numMapCourante / 100 + '0', 7, 3)
+       90    0      0    0  	AFFTILE(numMapCourante % 100 / 10 + '0', 7, 2)
+       75    0      0    0  	AFFTILE(numMapCourante % 10 + '0', 7, 1)
+        .    .      .    .  	
+        0    0      0    0  	SDL_Rect infosTempsProcSrc  = {32, 16, 1, 1};
+        .    .      .    .  	SDL_Rect infosTempsProcDest = {0, 0, 1, 4};
+        .    .      .    .  	unsigned int i = 0;
+        0    0  2,488    0  	char chronos[NB_CHRONOS][21] = {"Chargement map", "Évènements", "Joueur / Cinématique", "Rendu graphique", "Menus"};
+        0    0      0    0  	for( ; i < NB_CHRONOS; i++) {
+    3,776    0      0    0  		infosTempsProcDest.w = tempsProcesseur[i] / 20;
+    1,265    0      0    0  		if((signed int)tempsProcesseur[i] > (signed int)precedentsTempsProc[i] * 3 / 2 + 200) {
+        0    0      0    0  			WARN("Lag spike détecté ! ")
+       90    0      0    0  			fprintf(fichierLog, "%s @ frame %u : %u cycles (comparés à %u).", chronos[i], IDframe, tempsProcesseur[i], precedentsTempsProc[i]);
+        0    0      0    0  			WARN("Ça peut être un faux positif, faites attention.")
+        .    .      .    .  		}
+        0    0      0    0  		precedentsTempsProc[i] = tempsProcesseur[i];
+        .    .      .    .  		rendreCopie(&infosTempsProcSrc, &infosTempsProcDest);
+        .    .      .    .  		
+        0    0      0    0  		infosTempsProcSrc.y++;
+        .    .      .    .  		infosTempsProcDest.y += 4;
+        .    .      .    .  	}
+    1,555    0      0    0  }
+        .    .      .    .  #endif
+        .    .      .    .  
+        .    .      .    .  void attacherCameraSprite(unsigned int IDsprite) {
+        .    .      .    .  	Sprite* sprite = &spritesMapCourante[IDsprite];
+        .    .      .    .  	
+        0    0      0    0  	if(FLAG(CAMERA_FIXE) == 0) {
+        1    0      0    0  		int deplacementVert = sprite->positionVert - (positionVertCamera + (HAUTEUR_RENDU - HAUTEUR_TILE) / 2);
+        0    0      0    0  		int deplacementHoriz = sprite->positionHoriz - (positionHorizCamera + (LARGEUR_FENETRE - LARGEUR_TILE) / 2);
+        .    .      .    .  		
+        0    0      0    0  		if(deplacementVert == 0 && deplacementHoriz == 0) {
+        .    .      .    .  			return;
+        .    .      .    .  		}
+        .    .      .    .  		
+        .    .      .    .  		if(deplacementVert > VITESSE_CAMERA) {
+        .    .      .    .  			deplacementVert = VITESSE_CAMERA;
+        .    .      .    .  		} else if(deplacementVert < -VITESSE_CAMERA) {
+        .    .      .    .  			deplacementVert = -VITESSE_CAMERA;
+        .    .      .    .  		}
+        .    .      .    .  		if(deplacementHoriz > VITESSE_CAMERA) {
+        .    .      .    .  			deplacementHoriz = VITESSE_CAMERA;
+        .    .      .    .  		} else if(deplacementHoriz < -VITESSE_CAMERA) {
+        .    .      .    .  			deplacementHoriz = -VITESSE_CAMERA;
+        .    .      .    .  		}
+        .    .      .    .  		
+        0    0      0    0  		positionVertCamera += deplacementVert;
+    1,119    0      0    0  		if(positionVertCamera + HAUTEUR_RENDU > couchesMapCourante[(unsigned int)sprite->couche].hauteur * HAUTEUR_TILE) {
+        0    0      0    0  			positionVertCamera = couchesMapCourante[(unsigned int)sprite->couche].hauteur * HAUTEUR_TILE - HAUTEUR_RENDU;
+        .    .      .    .  		}
+        0    0      0    0  		if((signed int)positionVertCamera < 0) {
+        0    0      0    0  			positionVertCamera = 0;
+        .    .      .    .  		}
+        .    .      .    .  		
+        0    0      0    0  		positionHorizCamera += deplacementHoriz;
+        0    0      0    0  		if(positionHorizCamera + LARGEUR_FENETRE > couchesMapCourante[(unsigned int)sprite->couche].largeur * LARGEUR_TILE) {
+        .    .      .    .  			positionHorizCamera = couchesMapCourante[(unsigned int)sprite->couche].largeur * LARGEUR_TILE - LARGEUR_FENETRE;
+        .    .      .    .  		}
+        0    0      0    0  		if((signed int)positionHorizCamera < 0) {
+        0    0      0    0  			positionHorizCamera = 0;
+        .    .      .    .  		}
+        .    .      .    .  	}
+        .    .      .    .  }
+        .    .      .    .  
+        0    0      0    0  void afficherBarreEtat(void) {
+      142    0      0    0  	if(FLAG(AFFICHER_BARRE_ETAT)) {
+        0    0      0    0  		wmemset(&barreEtat.texte[3], L' ', LONG_NOM_JOUEUR - 1);
+        0    0      0    0  		*wcpcpy(&barreEtat.texte[3], nomJoueur) = ' ';
+    1,147    0      0    0  		ecrireNombre(niveauJoueur, &barreEtat.texte[20]);
+        0    0      0    0  		barreEtat.texte[24] = L' ';
+    1,147    0      0    0  		ecrireNombre(PVjoueur, &barreEtat.texte[25]);
+        0    0  1,147    1  		barreEtat.texte[28] = L' ';
+        0    0      0    0  		ecrireNombre(PVmaxJoueur, &barreEtat.texte[29]);
+        0    0      0    0  		rendreMenu(&barreEtat);
+        .    .      .    .  		
+        0    0      0    0  		SDL_Rect rectSource = {0, JOUEUR_BAS * HAUTEUR_TILE, LARGEUR_TILE, HAUTEUR_TILE};
+        .    .      .    .  		SDL_Rect rectDest = {LARGEUR_TILE, (NB_TILES_HAUT - NB_TILES_BARRE_ETAT + 1) * HAUTEUR_TILE, LARGEUR_TILE * 2, HAUTEUR_TILE * 2};
+        .    .      .    .  		rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  	}
+        1    0      0    0  }
+        .    .      .    .  
+        .    .      .    .  
+        .    .      .    .  void pleinEcran(void) {
+        .    .      .    .  	if(FLAG(PLEIN_ECRAN_ACTIF)) {
+        .    .      .    .  		ETEINDRE_FLAG(PLEIN_ECRAN_ACTIF);
+        .    .      .    .  		taillePixel = 1;
+        .    .      .    .  		SDL_SetWindowFullscreen(pFenetre, 0);
+        .    .      .    .  		boiteVert = 0;
+-- line 567 ----------------------------------------
+-- line 588 ----------------------------------------
+        .    .      .    .  		}
+        .    .      .    .  	}
+        .    .      .    .  }
+        .    .      .    .  
+        .    .      .    .  
+        .    .      .    .  
+        .    .      .    .  // ANIMATIONS
+        .    .      .    .  
+      476    0      0    0  void animation_SMB3(void) {
+        0    0      0    0  	unsigned int coordVert = 0;
+        .    .      .    .  	unsigned int coordHoriz = -1;
+        1    1      0    0  	SDL_Rect rectSource = TILE(0, HAUTEUR_TILE);
+        .    .      .    .  	
+        .    .      .    .  	void placerTile(void) {
+        0    0      0    0  		afficherRect(&rectSource, coordVert * HAUTEUR_TILE, coordHoriz * LARGEUR_TILE);
+        0    0      0    0  		rendrePresent();
+        0    0      0    0  		SDL_Delay(1);
+        .    .      .    .  	}
+        .    .      .    .  	int taille_V = NB_TILES_HAUT;
+        .    .      .    .  	int taille_H = NB_TILES_LARG;
+        .    .      .    .  	int compteur;
+        .    .      .    .  	while(taille_V > 0) {
+        .    .      .    .  		// Exécuter une spirale.
+        0    0      0    0  		for(compteur = 0; compteur < taille_H; compteur++) {
+        0    0      0    0  			coordHoriz++;
+        .    .      .    .  			placerTile();
+        .    .      .    .  		}
+        .    .      .    .  		taille_V--;
+        0    0      0    0  		for(compteur = 0; compteur < taille_V; compteur++) {
+      182    0      0    0  			coordVert++;
+        .    .      .    .  			placerTile();
+        .    .      .    .  		}
+        .    .      .    .  		taille_H--;
+        0    0      0    0  		for(compteur = 0; compteur < taille_H; compteur++) {
+      476    0      0    0  			coordHoriz--;
+        .    .      .    .  			placerTile();
+        .    .      .    .  		}
+        .    .      .    .  		taille_V--;
+       13    0      0    0  		for(compteur = 0; compteur < taille_V; compteur++) {
+      169    0      0    0  			coordVert--;
+        .    .      .    .  			placerTile();
+        .    .      .    .  		}
+        .    .      .    .  		taille_H--;
+        .    .      .    .  	}
+        1    0      0    0  }
+        .    .      .    .  
+        0    0      0    0  void gaucheDroite(void) {
+        .    .      .    .  #define NB_HAUT		(NB_TILES_HAUT + 1) / 2
+        .    .      .    .  	int decalage[NB_HAUT];
+        1    0      0    0  	SDL_Rect rectSource = TILE(0, HAUTEUR_TILE);
+        .    .      .    .  	SDL_Rect rectDest = {0, 0, LARGEUR_TILE, HAUTEUR_TILE * 2};
+        0    0      0    0  	unsigned char termines = NB_HAUT;
+        .    .      .    .  	
+        0    0      0    0  	while(termines != 0) {
+        0    0      0    0  		termines--;
+        0    0      0    0  		decalage[termines] = rand() % 24 - 23;
+        .    .      .    .  	}
+        .    .      .    .  	// termines = 0 !
+        0    0      0    0  	while(termines != NB_HAUT) {
+        .    .      .    .  		unsigned char curseur = 0;
+        0    0      0    0  		while(curseur < NB_HAUT) {
+      120    0      0    0  			if(decalage[curseur] >= 0) {
+        .    .      .    .  				rectDest.y = curseur * HAUTEUR_TILE * 2;
+        0    0      0    0  				rectDest.x = decalage[curseur] * LARGEUR_TILE;
+        .    .      .    .  				rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  			}
+        .    .      .    .  			if(decalage[curseur] == NB_TILES_LARG) {
+        0    0      0    0  				termines++;
+        .    .      .    .  			}
+        0    0    245    0  			decalage[curseur]++;
+        .    .      .    .  			curseur++;
+        .    .      .    .  		}
+        0    0      0    0  		rendrePresent();
+        0    0      0    0  		SDL_Delay(10);
+        .    .      .    .  	}
+        0    0      0    0  }
+        .    .      .    .  
+        0    0      0    0  void coin(void) {
+        .    .      .    .  	int coordVert;
+        .    .      .    .  	unsigned int coordHoriz;
+        .    .      .    .  	unsigned int etape = 0;
+        1    0      0    0  	SDL_Rect rectSource = TILE(0, HAUTEUR_TILE);
+        .    .      .    .  	SDL_Rect rectDest = {0, 0, LARGEUR_TILE * 2, HAUTEUR_TILE * 2};
+        0    0      0    0  	while(etape * 2 < NB_TILES_HAUT + NB_TILES_LARG) {
+        .    .      .    .  		coordHoriz = 0;
+        0    0      0    0  		coordVert = etape;
+        0    0      0    0  		while(coordVert >= 0) {
+        .    .      .    .  			rectDest.x = coordHoriz * LARGEUR_TILE * 2;
+        .    .      .    .  			rectDest.y = coordVert * HAUTEUR_TILE * 2;
+        .    .      .    .  			rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  			coordHoriz++;
+        0    0      0    0  			coordVert--;
+        0    0      0    0  			SDL_Delay(3);
+        .    .      .    .  		}
+        0    0      0    0  		etape++;
+        0    0      0    0  		rendrePresent();
+        .    .      .    .  	}
+        1    0      0    0  }
+        .    .      .    .  
+        .    .      .    .  void rentrer(void) {
+        .    .      .    .  	unsigned int etape = 0;
+        .    .      .    .  	SDL_Rect rectSource = TILE(0, HAUTEUR_TILE);
+        .    .      .    .  	SDL_Rect rectDest = {0, 0, LARGEUR_TILE / 4, HAUTEUR_FENETRE};
+        .    .      .    .  	while(etape <= NB_TILES_LARG * 2) {
+        .    .      .    .  		rectDest.x = etape * LARGEUR_TILE / 4;
+        .    .      .    .  		rendreCopie(&rectSource, &rectDest);
+-- line 693 ----------------------------------------
+-- line 695 ----------------------------------------
+        .    .      .    .  		rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  		etape++;
+        .    .      .    .  		rendrePresent();
+        .    .      .    .  		SDL_Delay(4);
+        .    .      .    .  	}
+        .    .      .    .  	SDL_Delay(100);
+        .    .      .    .  }
+        .    .      .    .  
+        0    0      0    0  void sortir(void) {
+        .    .      .    .  	int etape = NB_TILES_LARG * 2;
+        1    0      0    0  	SDL_Rect rectSource = RECT_TILE;
+        .    .      .    .  	SDL_Rect rectDest = {0, 0, LARGEUR_TILE / 4, HAUTEUR_FENETRE};
+        0    0      0    0  	while(etape >= 0) {
+        .    .      .    .  		rectDest.x = etape * LARGEUR_TILE / 4;
+        .    .      .    .  		rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  		rectDest.x = (NB_TILES_LARG * 4 - etape) * LARGEUR_TILE / 4;
+        .    .      .    .  		rendreCopie(&rectSource, &rectDest);
+        .    .      .    .  		etape--;
+        0    0      0    0  		rendrePresent();
+        0    0      0    0  		SDL_Delay(4);
+        .    .      .    .  	}
+        0    0      0    0  	SDL_Delay(100);
+        1    0      0    0  }
+        .    .      .    .  
+        .    .      .    .  void snake(void) {
+        .    .      .    .  	unsigned int etape = 0;
+        .    .      .    .  	unsigned int etapeDest = 0;
+        .    .      .    .  	unsigned int nbEtapes = 0;
+        .    .      .    .  	SDL_Rect rectSource = TILE(0, NOIR * HAUTEUR_TILE);
+        .    .      .    .  	
+        .    .      .    .  	while(etape < NB_TILES_HAUT * NB_TILES_LARG) {
+-- line 725 ----------------------------------------
+
+--------------------------------------------------------------------------------
+D1mr DLmr D1mw DLmw 
+--------------------------------------------------------------------------------
+   4    0    0    0  percentage of events annotated
+

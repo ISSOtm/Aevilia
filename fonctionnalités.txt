@@ -1,0 +1,116 @@
+
+FEATURES DU MOTEUR DE JEU D'AEVILIA
+
+
+Préambule
+
+Le moteur d'Aevilia a été conçu pour apporter les fonctionnalités requises pour faire tourner un jeu, tout en restant souple et codé proprement.
+Voici une liste des fonctionnalités proposées ! (Fait aussi office de changelog)
++ : Ajout
+- : Retrait
+* : Modification
+! : Note
+~ : Bugfix
+
+
+
+## Version 0.4.0 ##
+
+* Modification du moteur graphique, ça devrait prendre moins de calculs sur le processeur. Le gain en FPS est minime, mais le code y a gagné en clarté (je pense :P)
+* Le moteur de rendu a été très légèrement modifié. Ça pourrait avoir un léger impact (positif) sur les performances dans certains cas, mais autant éviter des cycles de calcul inutiles.
+* Le script qui effectue le rendu d'une tile à l'écran a été modifié... et apparemment ça divise le temps de calcul par 2 ! (voir *******LIEN_avant*********** et *******LIEN_apres********, dans le dossier Aevilia/Records).
+* La maison a été étendue horizontalement, pour tester le scrolling horizontal de la caméra.
+* L'animation de la porte a été changée... plusieurs fois, en fait, surtout pour fixer des bizarreries graphiques.
++ Un failsafe pour les objets invalides a été ajouté ; comme je suis fan de Pokémon, il s'appelle MISSINGITEM.
++ Il a aussi une description.
++ Ajout d'un système de combat. **TODO**
++ Un objet servant vaguement au test a été ajouté : un Zap Jouet !
++ Ajout de cinématiques plus conséquentes, appelées en interne "films". Yeah 8) ! **TODO**
+* La description des objets est affichée constamment dans l'inventaire du joueur, au lieu de devoir "DÉCRIRE".
++ "DÉCRIRE" est remplacée par une option pour jeter des objets.
+* Les couches ne sont maintenant plus chargées en permanence en mémoire dès le chargement du jeu, mais dynamiquement, c'est-à-dire que chaque map charge ses couches au besoin, qui sont maintenant stockées dans des fichiers .layr externes, avec une syntaxe conçue pour (tenter d') être plus pratique ! Pour les compiler, il suffit de faire "make couches" !
++ De même pour les sprites, qui utilisent, eux, des fichiers .spr compilés avec "make sprites" !
+! Au final, on économise de la place disque (si, si) et de l'occupation mémoire. Tout bénef' !
+~ Le joueur n'apparaît plus dans l'écran de crash.
++ Le jeu se ferme instantanément avec la croix / Alt + F4, mais la touche Échap permet d'avoir une petite animation à la place.
++ Interagir avec un point de sauvegarde permet de retourner à l'écran titre, même si on ne sauvegarde pas.
++ Des barres colorées indiquent la charge des différents composants du jeu. Elles comptent comme des infos de debug (donc enfoncer P les cache).
+! Même au repos, le temps d'exécution n'est pas constant. Aucune idée de pourquoi.
++ Quelques optimisations de code, principalement liées à de la recherche sur les outils fournis par GCC.
+~ Obtenir un objet corrompait la description du bouton "ANNULER".
+* Amélioration du menu de debug des objets.
++ Ajout d'une animation d'ouverture des menus et d'une autre de fermeture.
+! Apparemment ça cause des bugs avec les mécanismes d'"options", parfois le curseur ne se transforme pas quand on sélectionne une option.
+
+
+## Version 0.3.1 ##
+
+~ Le sprite du joueur n'apparaît plus lors de la cinématique d'intro.
+
+
+## Version 0.3.0 ##
+
++ Ajout de cinématiques.
++ Conséquemment, les portes s'ouvrent et se ferment, c'est trop beauuuu !
+! L'animation quand le personnage est en intérieur est un peu awkward. Ça sera fixé dans une prochaine version.
++ Ajout de PVs au joueur.
++ Ajout d'une barre d'état.
++ Ajout d'un support natif de la direction pour les sprites.
+~ L'inventaire ne peut plus être ouvert quand le joueur se déplace.
++ Ajout d'un mode plein écran.
+! Si l'écran est trop petit, ça ne sert pas à grand-chose...
+* Refonte du moteur de transparence ; toujours plus de FPS !
++ La map TEST est plus fournie : une maison, un étang, un pont au-dessus de l'étang, un pont au-dessus d'herbe (whut ? :P)
+* Il est possible de marcher derrière (en-dessous) de la totalité de l'arbre - à l'exception de son tronc.
+
+
+## Version 0.2.0 ##
+
+~ Refonte de la transparence, les 62~63 FPS sont de retour !
+! Trop de transparences en simultané à l'écran font ramer le jeu.
++ Ajout de changements de couche ; certaines coordonnées font changer le joueur de couche.
++ Ajout d'un pont dans la map de test, sert à tester le mécanisme ci-dessus.
++ Ajout de warps.
++ Ajout d'une maison de test.
+* Modification de la collision, les couches sont traitées par paires.
++ Ajout des fonctions de chargement de sauvegardes à l'écran titre.
+
+
+## Version 0.1.5a ##
+
++ Ajout d'un mécanisme de transparence... qui fait tourner le jeu à 1~2 FPS.
+* Modification du comportement de DEBUG -> OBJETS.
++ Ajouté les graphismes d'un arbre.
+
+
+## Version 0.1.4 (Première version loggée ici) ##
+
++ Terminaison "propre" du programme en cas de SIGSEGV (le programme ne crashe pas, mais termine sans poser de questions).
++ Tourne à 62 fps (quasi-contants).
++ Possibilité de #define PRODUCTION pour retirer plusieurs fonctionnalités de debug.
++ Compteur de fps (DEBUG).
++ Système de touches simple.
++ Scripts associés à la pression de chaque touche, gérables sous forme de pile.
++ Collision directionnelle, dépendant de la destination du mouvement.
++ Interactions chaînées, permettent des dialogues renouvelés facilement.
++ Fonction de warp de map à map.
++ Affichage du joueur détaché de sa position réelle + une fonction les rattachant.
++ Moteur textuel acceptant les accents.
++ Map TEST (ID 0), teste différents aspects du moteur.
++ Écran titre, permet de choisir entre CONTINUER et NOUVELLE PARTIE (non fonctionnels pour le moment).
++ Système de "menus" (overlays) sous forme de pile.
++ Système de "commandes" (instructions) souple.
++ Graphismes utilisant la SDL.
++ Fonctions de rendu séparées pour une meilleure flexibilité.
++ Animations flexibles intégrées au moteur.
++ Sprites à transparence variable.
++ Rendu dépendant de la position de la caméra.
++ Caméra détachée du joueur + une fonction la rattachant.
++ 5 animations (transitions).
++ Inventaire flexible (ordre des objets facile à changer).
++ Un seul objet pour le moment, DEBUG.
++ DEBUG permet de modifier ses objets et de warper.
++ DEBUG est très volatil en production :3
++ Mécanisme de sauvegarde existant (reste à implanter des points de sauvegarde dans le jeu).
++ Système de logging, principalement pour vérifier si l'initialisation du jeu se passe bien.
+

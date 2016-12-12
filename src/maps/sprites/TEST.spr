@@ -1,0 +1,80 @@
+[spriteTest0]
+positionVert = 36
+positionHoriz = 10
+tile = 3
+direction = 4
+IDinteraction = 0
+couche = 0
+
+[spriteTest1]
+positionVert = 36
+positionHoriz = 26
+tile = 4
+direction = 4
+IDinteraction = 0
+couche = 0
+
+[spriteTest2]
+positionVert = 36
+positionHoriz = 42
+tile = 5
+direction = 4
+IDinteraction = 0
+couche = 0
+
+[spriteTest3]
+positionVert = 36
+positionHoriz = 58
+tile = 6
+direction = 4
+IDinteraction = 0
+couche = 0
+
+[spriteTest4]
+positionVert = 10
+positionHoriz = 0
+tile = 5
+direction = 4
+IDinteraction = 0
+couche = 0
+
+[spriteTest5]
+positionVert = 16
+positionHoriz = 64
+tile = 18
+direction = 1
+IDinteraction = 0
+couche = 0
+
+[spriteTest6]
+positionVert = 16
+positionHoriz = 80
+tile = 0
+direction = 4
+IDinteraction = 1
+couche = 0
+
+[sauvegarde_TEST]
+positionVert = 32
+positionHoriz = 352
+tile = 151
+direction = 4
+IDinteraction = 3
+couche = 0
+
+[spriteTestPanneau]
+positionVert = 144
+positionHoriz = 368
+tile = 168
+direction = 4
+IDinteraction = 5
+couche = 0
+
+[testBataille]
+positionVert = 448
+positionHoriz = 288
+tile = 165
+direction = 4
+IDinteraction = 6
+couche = 0
+

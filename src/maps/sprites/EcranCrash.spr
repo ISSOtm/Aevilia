@@ -1,0 +1,9 @@
+[spriteDev]
+positionVert = 216
+positionHoriz = 768
+tile = 18
+direction = 0
+IDinteraction = 0
+couche = 0
+
+Sprite spriteDev = {HAUTEUR_FENETRE / 2, LARGEUR_FENETRE, JOUEUR_HAUT, 0, 0, 0};
