@@ -22,6 +22,7 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <wchar.h>
+#include <stdbool.h>
 
 #include "typedefs.h"
 
@@ -86,10 +87,14 @@ unsigned char						positionCurseurEntree;
 
 unsigned int						IDframe; // Compteur de frames, utilisé pour timer les évènements temporels.
 
+#define SDL_SCANCODE_BOUTON_SOURIS	3
 SDL_Scancode						codesTouches[NB_TOUCHES]; // Table de correspondance entre les touches et leur position logique dans le jeu.
 EtatTouche							etatTouches[NB_TOUCHES]; // Indique si les touches sont enfoncées ou non.
 void								(*scripts[NB_TOUCHES])(void);
 EtatTouche							touchesPressees[NB_TOUCHES]; // Indique les touches qui ont été pressées à cette frame.
+bool								mouvementEnCours;
+unsigned int						positionSourisVert;
+unsigned int						positionSourisHoriz;
 
 unsigned char						flags[(NB_FLAGS + 7) / 8];
 #define FLAG(numero_flag)			((flags[numero_flag / 8] >> (numero_flag % 8)) & 1)

@@ -41,7 +41,7 @@ unsigned int chargerSauv(Commande* commande) {
 	return 1; // Succès du chargement.
 }
 
-wchar_t chaineMauvaiseSauv[]						= L"Le chargement     de la\1 sauvegarde a     échoué.";
+wchar_t chaineMauvaiseSauv[]						= L"Le chargement     de la\1 sauvegarde a    échoué.";
 Commande mauvaiseSauv1								= CMD_CHAINE(chaineMauvaiseSauv, &attendreEtTerminer);
 Commande mauvaiseSauv0								= CMD_EFFACER(&mauvaiseSauv1);
 

@@ -591,6 +591,7 @@ typedef enum {
 #define E_SEXE										3
 #define NOM_JOUEUR									4
 #define IL_ELLE										5
+#define LE_LA										6
 
 #define CMD_CHAINE(chaine, suiv)					{.commande = CHAINE, .pointeur = chaine, .compteur = 0, .suivante = suiv}
 #define CMD_CHAINE_INSTANT(chaine, suiv)			{.commande = CHAINE, .pointeur = chaine, .compteur = 1, .suivante = suiv}
@@ -848,6 +849,7 @@ typedef enum {
 	AVANCER_FRAME,
 #endif
 	QUITTER_JEU,
+	BOUTON_SOURIS,
 	
 	NB_TOUCHES
 } Touche;

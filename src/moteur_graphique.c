@@ -188,8 +188,8 @@ void rendreCopie(const SDL_Rect* rectSource, const SDL_Rect* rectDest) {
 	SDL_Rect rDest	= {rectDest->x * taillePixel, rectDest->y * taillePixel, rectDest->w * taillePixel, rectDest->h * taillePixel};
 	SDL_Rect rSrc	= {rectSource->x, rectSource->y, rectSource->w, rectSource->h};
 	
-	if(rDest.y < 0) {
-		if(rDest.y + rDest.h <= 0) {
+	if(rectDest->y < 0) {
+		if(rectDest->y + rectDest->h <= 0) {
 			return;
 		}
 		
@@ -198,7 +198,17 @@ void rendreCopie(const SDL_Rect* rectSource, const SDL_Rect* rectDest) {
 		
 		rDest.h += rDest.y; // rDest.y < 0 !
 		rDest.y = 0;
-	}
+	}/* else if(rectDest->y + rectDest->h > HAUTEUR_FENETRE) {
+		if(rectDest->y >= HAUTEUR_FENETRE) {
+			return;
+		}
+		
+		rSrc.h += rectDest->y + rectDest->h - HAUTEUR_FENETRE;
+		rSrc.y -= rectDest->y + rectDest->h - HAUTEUR_FENETRE;
+		
+		rDest.h += rDest.y + rDest.h - HAUTEUR_FENETRE * taillePixel;
+		rDest.y = HAUTEUR_FENETRE * taillePixel - rDest.h;
+	}*/
 	
 	if(rDest.x < 0) {
 		if(rDest.x + rDest.w <= 0) {

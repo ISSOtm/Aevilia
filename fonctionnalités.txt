@@ -55,7 +55,7 @@ Voici une liste des fonctionnalités proposées ! (Fait aussi office de changelo
 ! L'animation quand le personnage est en intérieur est un peu awkward. Ça sera fixé dans une prochaine version.
 + Ajout de PVs au joueur.
 + Ajout d'une barre d'état.
-+ Ajout d'un support natif de la direction pour les sprites.
++ Ajout d'un support complet de la direction pour les sprites.
 ~ L'inventaire ne peut plus être ouvert quand le joueur se déplace.
 + Ajout d'un mode plein écran.
 ! Si l'écran est trop petit, ça ne sert pas à grand-chose...
@@ -76,7 +76,7 @@ Voici une liste des fonctionnalités proposées ! (Fait aussi office de changelo
 + Ajout des fonctions de chargement de sauvegardes à l'écran titre.
 
 
-## Version 0.1.5a ##
+## Version 0.2.0a ##
 
 + Ajout d'un mécanisme de transparence... qui fait tourner le jeu à 1~2 FPS.
 * Modification du comportement de DEBUG -> OBJETS.
@@ -86,7 +86,7 @@ Voici une liste des fonctionnalités proposées ! (Fait aussi office de changelo
 ## Version 0.1.4 (Première version loggée ici) ##
 
 + Terminaison "propre" du programme en cas de SIGSEGV (le programme ne crashe pas, mais termine sans poser de questions).
-+ Tourne à 62 fps (quasi-contants).
++ Tourne à 62 fps (quasi-constants).
 + Possibilité de #define PRODUCTION pour retirer plusieurs fonctionnalités de debug.
 + Compteur de fps (DEBUG).
 + Système de touches simple.
@@ -96,11 +96,11 @@ Voici une liste des fonctionnalités proposées ! (Fait aussi office de changelo
 + Fonction de warp de map à map.
 + Affichage du joueur détaché de sa position réelle + une fonction les rattachant.
 + Moteur textuel acceptant les accents.
-+ Map TEST (ID 0), teste différents aspects du moteur.
++ Map TEST (ID 0), teste différents aspects du moteur de jeu.
 + Écran titre, permet de choisir entre CONTINUER et NOUVELLE PARTIE (non fonctionnels pour le moment).
 + Système de "menus" (overlays) sous forme de pile.
 + Système de "commandes" (instructions) souple.
-+ Graphismes utilisant la SDL.
++ Graphismes utilisant la SDL2.
 + Fonctions de rendu séparées pour une meilleure flexibilité.
 + Animations flexibles intégrées au moteur.
 + Sprites à transparence variable.

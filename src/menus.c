@@ -173,7 +173,9 @@ void activerMenus(void) {
 // Rend le menu passé en argument.
 void rendreMenu(Menu* menu) {
 	if(menu->fermeture) {
-		if(!--menu->tailleHorizCourante) {
+		if(menu->tailleHorizCourante <= menu->tailleHoriz / 16 + 1) {
+			menu->tailleHorizCourante = 0;
+			
 			if(!menuArendre) {
 				return;
 			}
@@ -208,9 +210,14 @@ void rendreMenu(Menu* menu) {
 			}
 			
 			return;
+		} else {
+			menu->tailleHorizCourante -= menu->tailleHoriz / 16 + 1;
 		}
 	} else if(menu->tailleHorizCourante < menu->tailleHoriz) {
-		menu->tailleHorizCourante++;
+		menu->tailleHorizCourante += menu->tailleHoriz / 16 + 1;
+		if(menu->tailleHorizCourante > menu->tailleHoriz) {
+			menu->tailleHorizCourante = menu->tailleHoriz;
+		}
 	}
 	
 	int positionHoriz = menu->positionHoriz + (menu->tailleHoriz - menu->tailleHorizCourante) * LARGEUR_TILE / 2;
@@ -278,7 +285,7 @@ void rendreMenu(Menu* menu) {
 	}
 	unsigned int nbCharsAffich = wcslen(menu->texte);
 	// On cappe le nombre de caractères à rendre. De plus, si la touche ANNULER est enfoncée et qu'on ne force pas le défilement du texte, on rend tous les caractères.
-	if(menu->nbCharsArendre > nbCharsAffich || (etatTouches[ANNULER] == TOUCHE_ENFONCEE && !FLAG(FORCER_DEFIL_TEXTE))) {
+	if(menu->nbCharsArendre > nbCharsAffich || ((etatTouches[ANNULER] == TOUCHE_ENFONCEE || touchesPressees[BOUTON_SOURIS]) && !FLAG(FORCER_DEFIL_TEXTE))) {
 		menu->nbCharsArendre = nbCharsAffich;
 	}
 	// Selon l'état de la touche VALIDER, on marque le texte comme étant déjà passé, ou non.
@@ -354,7 +361,7 @@ unsigned int afficherChaine(Commande* commande) {
 			switch(*src) {
 				// Les cas particuliers de caractères précèdent le default (afficher le caractère).
 				
-				// Affiche "on" ou "a" selon le sexe du joueur (prévu pour être utilisé pour "mon"/"ma", "son"/"sa", etc.
+				// Affiche "on" ou "a" selon le sexe du joueur (prévu pour être utilisé pour "mon"/"ma", "son"/"sa", etc.)
 				case MON_MA:
 					if(sexeJoueur == GARCON) {
 						*dest = L'o';
@@ -390,6 +397,17 @@ unsigned int afficherChaine(Commande* commande) {
 						*dest = L'l';
 						dest++;
 						*dest = L'e';
+					}
+					dest++;
+				break;
+				// Affiche "le" ou "la" en fonction du sexe du joueur.
+				case LE_LA:
+					*dest = 'l';
+					dest++;
+					if(sexeJoueur == GARCON) {
+						*dest = 'e';
+					} else {
+						*dest = 'a';
 					}
 					dest++;
 				break;
@@ -491,8 +509,9 @@ unsigned int nouveauMenu(Commande* commande) {
 }
 
 unsigned int attendre(void) {
-	if(touchesPressees[VALIDER]) {
+	if(touchesPressees[VALIDER] || touchesPressees[BOUTON_SOURIS]) {
 		touchesPressees[VALIDER] = TOUCHE_RELACHEE;
+		touchesPressees[BOUTON_SOURIS] = TOUCHE_RELACHEE;
 		return 0;
 	}
 	
@@ -575,6 +594,10 @@ unsigned int options(Commande* commande) {
 		}
 	
 		if(commande->PHASE == PHASE_OPTION_DEPL) {
+			if(mouvementEnCours) {
+				// TODO
+			}
+			
 			// Si la fenêtre est trop haute,
 			if(commande->POSITION_FENETRE < 0) {
 				// On remonte tout.

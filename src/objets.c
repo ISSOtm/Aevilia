@@ -35,7 +35,7 @@ AttribObjet* attributsObjets[NB_OBJETS]					= {&obj__DEBUG, &obj__ZapJouet};
 wchar_t chaineObjetNonJetable[]							= L"Je ne m'en séparerai pas !";
 Commande commandeJeterObjet8							= CMD_CHAINE(chaineObjetNonJetable, &attendreEtTerminer);
 Commande commandeJeterObjet7							= CMD_FONCTION(jeterObjetJoueur, NULL);
-wchar_t ouiNonJeterObjet[2][5]							= {L"Oui\1", L"Non"};
+wchar_t ouiNonJeterObjet[2][LONG_NOM_OPTIONS]			= {L"Oui\1", L"Non"};
 Commande* confirmationsJeterObjet[2]					= {&commandeJeterObjet7, NULL};
 Commande commandeJeterObjet6							= CMD_OPTIONS(confirmationsJeterObjet, ouiNonJeterObjet, 2, NULL);
 Menu menuConfirmationJeterObjet							= MENU(HAUTEUR_FENETRE - 5 * HAUTEUR_TILE, LARGEUR_FENETRE - LARGEUR_TILE * 8, 3, 6, &commandeJeterObjet6);
@@ -73,10 +73,8 @@ wchar_t nomsObjets[NB_OBJETS+1][LONG_NOM_OPTIONS]		= {[0] = L"Annuler", [1 ... N
 Commande selectionnerObjet								= CMD_OPTIONS(actionsObjets, nomsObjets, 0, &rebouclerInventaire);
 // Générer la liste des objets dans l'inventaire.
 Commande genererInventaire								= CMD_FONCTION(arrangerInventaire, &selectionnerObjet);
-// Penser à modifier le nombre de frames !
-Commande attendreDeroulementDescription					= CMD_PAUSE(28, &genererInventaire);
 
-Menu inventaire											= MENU(0, (NB_TILES_LARG - LONG_NOM_OPTIONS - 2) * LARGEUR_TILE, NB_TILES_HAUT - 6, LONG_NOM_OPTIONS, &attendreDeroulementDescription);
+Menu inventaire											= MENU(0, (NB_TILES_LARG - LONG_NOM_OPTIONS - 2) * LARGEUR_TILE, NB_TILES_HAUT - 6, LONG_NOM_OPTIONS, &genererInventaire);
 
 
 Menu description										= TEXTBOX(NULL);

@@ -76,6 +76,7 @@ void initialiser(int argc, char* argv[]) {
 	codesTouches[AVANCER_FRAME]		= SDL_SCANCODE_A;
 #endif
 	codesTouches[QUITTER_JEU]		= SDL_SCANCODE_ESCAPE;
+	codesTouches[BOUTON_SOURIS]		= SDL_SCANCODE_BOUTON_SOURIS;
 	
 	taillePixel						= 1;
 	
@@ -160,6 +161,7 @@ void initialiser(int argc, char* argv[]) {
 #endif
 	LOGGER("Le timer a été créé.")
 	
+	SDL_WarpMouseInWindow(pFenetre, LARGEUR_FENETRE / 2, HAUTEUR_FENETRE / 2);
 	ALLUMER_FLAG(COLLISION_ACTIVE);
 	pousserScript(INVENTAIRE, ouvrirInventaire);
 	pousserScript(QUITTER_JEU, quitterJeu);
@@ -434,6 +436,7 @@ void traiterEvenements(void) {
 	for( ; i < NB_TOUCHES; i++) {
 		touchesPressees[i] = TOUCHE_RELACHEE;
 	}
+	mouvementEnCours = false;
 	
 	while(SDL_PollEvent(&evenement)) {
 		switch(evenement.type) {
@@ -450,6 +453,21 @@ void traiterEvenements(void) {
 			break;
 			case SDL_KEYUP:
 				relacherTouche(evenement.key.keysym.scancode);
+			break;
+			case SDL_MOUSEMOTION:
+				mouvementEnCours = true;
+				positionSourisVert  = evenement.motion.y;
+				positionSourisHoriz = evenement.motion.x;
+			break;
+			case SDL_MOUSEBUTTONDOWN:
+				if(evenement.button.button == SDL_BUTTON_LEFT) {
+					presserTouche(SDL_SCANCODE_BOUTON_SOURIS);
+				}
+			break;
+			case SDL_MOUSEBUTTONUP:
+				if(evenement.button.button == SDL_BUTTON_LEFT) {
+					relacherTouche(SDL_SCANCODE_BOUTON_SOURIS);
+				}
 			break;
 			case SDL_QUIT:
 				// L'utilisateur demande la fermeture ? Okay !
