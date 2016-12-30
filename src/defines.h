@@ -63,6 +63,7 @@ extern AttribObjet*					attributsObjets[NB_OBJETS];
 
 SDL_Window*   						pFenetre; // Fenêtre de jeu.
 SDL_Renderer* 						pRendu; // Rendu de la fenêtre du jeu.
+SDL_Texture*						framebuffer; // Texture servant de frame buffer.
 extern Image    					imgTiles; // Image des tiles.
 SDL_DisplayMode						affichage; // Contient des informations sur l'affichage plein écran.
 unsigned char						taillePixel; // Taille d'un pixel logique.

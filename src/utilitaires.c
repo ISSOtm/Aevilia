@@ -123,3 +123,15 @@ FILE* chargerFichier(const char* dossier, const char* nomFichier, const char* mo
 	return fopen(cheminComplet, mode);
 }
 
+
+void queryTextureInfo(SDL_Texture* texture) {
+	Uint32 format;
+	int access;
+	int w;
+	int h;
+	
+	SDL_QueryTexture(texture, &format, &access, &w, &h);
+	LOGGER("Texture ")
+	fprintf(fichierLog, "%p %u %d %d %d", texture, format, access, w, h);
+}
+

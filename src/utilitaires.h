@@ -43,11 +43,12 @@
 										terminer(ERREUR_ECRITURE_LOG); \
 									} \
 									fprintf(fichierLog, message);
-#define FATALERROR(message,statut)  if(logger(ERREUR) == ERREUR_ECRITURE_LOG) { \
+#define FATALERROR(message, statut) SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Erreur fatale", message, pFenetre);\
+									if(logger(ERREUR) == ERREUR_ECRITURE_LOG) { \
 										terminer(ERREUR_ECRITURE_LOG); \
 									} \
 									fprintf(fichierLog, message); \
-									logger("FATAL"); \
+									logger(FATAL); \
 									fprintf(fichierLog, "Arrêt d'Aevilia avec le statut %d.", statut); \
 									terminer(statut);
 #define LOG			"Log"
@@ -84,4 +85,6 @@ extern unsigned int min(unsigned int a, unsigned int b);
 
 // Charge un fichier dans le répertoire spécifié.
 extern FILE* chargerFichier(const char* dossier, const char* nomFichier, const char* mode);
+
+void queryTextureInfo(SDL_Texture* texture);
 

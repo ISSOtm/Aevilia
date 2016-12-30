@@ -26,10 +26,11 @@
 
 #include "objets/DEBUG.c"
 #include "objets/ZapJouet.c"
+#include "objets/PadOptions.c"
 
 
 #define TERMINATEUR_OBJET								(unsigned int)-1
-AttribObjet* attributsObjets[NB_OBJETS]					= {&obj__DEBUG, &obj__ZapJouet};
+AttribObjet* attributsObjets[NB_OBJETS]					= {&obj__DEBUG, &obj__ZapJouet, &obj__PadOptions};
 
 
 wchar_t chaineObjetNonJetable[]							= L"Je ne m'en séparerai pas !";

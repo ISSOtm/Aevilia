@@ -126,6 +126,7 @@ void initialiser(int argc, char* argv[]) {
 	if(!fichierLog) {
 		// On n'utilise pas terminer() car elle appelle les fonctions de logging.
 		printf("Échec du démarrage du logging.");
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Erreur fatale", "Impossible de demarrer le systeme de logging :(", NULL);
 		exit(ERREUR_OUVRIR_LOG);
 	}
 	
@@ -161,7 +162,6 @@ void initialiser(int argc, char* argv[]) {
 #endif
 	LOGGER("Le timer a été créé.")
 	
-	SDL_WarpMouseInWindow(pFenetre, LARGEUR_FENETRE / 2, HAUTEUR_FENETRE / 2);
 	ALLUMER_FLAG(COLLISION_ACTIVE);
 	pousserScript(INVENTAIRE, ouvrirInventaire);
 	pousserScript(QUITTER_JEU, quitterJeu);
@@ -405,6 +405,7 @@ void segfault(int arg) {
 	ERROR("SEGFAULT !")
 	ERROR("Code donné : ")
 	fprintf(fichierLog, "%d", arg);
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Segmentation fault !", "Le genre de crash bien imprevisible.", pFenetre);
 	terminer(ERREUR_SEGFAULT);
 }
 
@@ -674,7 +675,7 @@ void chargerMap(unsigned int IDmap) {
 				if(IDmap != ECRAN_CRASH) {
 					chargerMap(ECRAN_CRASH);
 				} else {
-					FATALERROR("Le chargement de l'écran de crash a échoué.", ERREUR_CHARGEMENT_COUCHES);
+					FATALERROR("Le chargement de l'ecran de crash a echoue.", ERREUR_CHARGEMENT_COUCHES);
 				}
 				return;
 			}
@@ -694,7 +695,7 @@ void chargerMap(unsigned int IDmap) {
 			if(IDmap != ECRAN_CRASH) {
 				chargerMap(ECRAN_CRASH);
 			} else {
-				FATALERROR("Le chargement de l'écran de crash a échoué.", ERREUR_CHARGEMENT_SPRITES);
+				FATALERROR("Le chargement de l'ecran de crash a echoue.", ERREUR_CHARGEMENT_SPRITES);
 			}
 			return;
 		}

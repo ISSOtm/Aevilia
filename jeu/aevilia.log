@@ -1,41 +1,40 @@
 
-[12:20:53] Message: Démarrage d'Aevilia !
-[12:20:53] Log: Logging démarré avec succès.
-[12:20:53] Log: Initialisation de la SDL...
-[12:20:53] Log: Initialisation terminée.
-[12:20:53] Log: Création de la fenêtre...
-[12:20:53] Log: Création du rendu...
-[12:20:53] Log: Rendu créé.
-[12:20:53] Log: Nettoyage de l'écran prédéfini.
-[12:20:53] Log: Chargement du fichier de tiles...
-[12:20:53] Log: Chargement du fichier img/tiles.bmp
-[12:20:53] Log: Chargement terminé.
-[12:20:53] Log: Le chargement des graphismes est terminé.
-[12:20:53] Log: Graphismes initialisés.
-[12:20:53] Log: Génération de la liste des headers de maps...
-[12:20:53] Log: Génération terminée.
-[12:20:53] Log: Récupération des sauvegardes...
-[12:20:53] Log: Terminé.
-[12:20:53] Log: Création du timer des frames...
-[12:20:53] Log: Le timer a été créé.
-[12:20:53] Log: Initialisation terminée !
+[05:05:08] Message: Démarrage d'Aevilia !
+[05:05:08] Log: Logging démarré avec succès.
+[05:05:08] Log: Initialisation de la SDL...
+[05:05:08] Log: Initialisation terminée.
+[05:05:08] Log: Création de la fenêtre...
+[05:05:08] Log: Création du rendu...
+[05:05:09] Log: Rendu créé.
+[05:05:09] Log: Nettoyage de l'écran prédéfini.
+[05:05:09] Log: Chargement du fichier de tiles...
+[05:05:09] Log: Chargement du fichier img/tiles.bmp
+[05:05:09] Log: Chargement terminé.
+[05:05:09] Log: Le chargement des graphismes est terminé.
+[05:05:09] Log: Graphismes initialisés.
+[05:05:09] Log: Génération de la liste des headers de maps...
+[05:05:09] Log: Génération terminée.
+[05:05:09] Log: Récupération des sauvegardes...
+[05:05:09] Log: Terminé.
+[05:05:09] Log: Création du timer des frames...
+[05:05:09] Log: Le timer a été créé.
+[05:05:09] Log: Initialisation terminée !
 
-[12:20:53] Log: Création des transparences...
-[12:20:53] Log: Transparences enregistrées.
-[12:20:53] Log: Génération de la liste des attributs de tiles...
-[12:20:53] Log: Génération terminée.
-[12:20:53] Log: Chargement écran titre...
-[12:20:53] Log: Ecran titre chargé.
-[12:20:53] Message: Chargement de la map 1.
-[12:20:53] Log: Ajout d'un menu. Pointeur : 0x636fc0. Frame : 0.
-[12:20:53] Message: Terminé !
-[12:20:54] Log: Ajout d'un menu. Pointeur : 0x63ae00. Frame : 28.
-[12:20:55] Message: Taille de l'affichage : 1080 pix de haut, 1920 pix de large.
-[12:20:55] Message: Taille de la boîte : 108 pix de haut, 192 pix de large.
-[12:20:56] Log: Retrait d'un menu. Pointeur : 0x63ae00. Frame : 196.
-[12:20:57] Log: Retrait d'un menu. Pointeur : 0x636fc0. Frame : 211.
-[12:20:57] Message: Décompression de la sauvegarde n°1
-[12:20:59] Message: Chargement de la map 0.
-[12:20:59] Message: Terminé !
-[12:21:03] Log: Ajout d'un menu. Pointeur : 0x611740. Frame : 449.
-[12:21:11] Log: Déchargement du fichier img/tiles.bmp
+[05:05:09] Log: Création des transparences...
+[05:05:09] Log: Transparences enregistrées.
+[05:05:09] Log: Génération de la liste des attributs de tiles...
+[05:05:09] Log: Génération terminée.
+[05:05:09] Log: Chargement écran titre...
+[05:05:09] Log: Ecran titre chargé.
+[05:05:09] Message: Chargement de la map 1.
+[05:05:09] Log: Ajout d'un menu. Pointeur : 0x637900. Frame : 0.
+[05:05:09] Message: Terminé !
+[05:05:09] Log: Ajout d'un menu. Pointeur : 0x638dc0. Frame : 27.
+[05:05:09] Log: Retrait d'un menu. Pointeur : 0x638dc0. Frame : 45.
+[05:05:10] Log: Retrait d'un menu. Pointeur : 0x637900. Frame : 60.
+[05:05:10] Message: Décompression de la sauvegarde n°0
+[05:05:11] Message: Chargement de la map 0.
+[05:05:11] Message: Terminé !
+[05:05:11] Message: Taille de l'affichage : 1080 pix de haut, 1920 pix de large.
+[05:05:11] Message: Taille de la boîte : 108 pix de haut, 192 pix de large.
+[05:05:31] Log: Déchargement du fichier img/tiles.bmp

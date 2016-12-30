@@ -187,6 +187,7 @@ SaveIlia : ./SaveIlia/SaveIlia
 	@echo
 	$(CC) $(LFLAGS) $^ -o $@
 	@echo
+	cp $@ ./jeu/SaveIlia
 
 ./SaveIlia/SaveIlia.o : ./SaveIlia/src/main.c $(srcdir)/typedefs.h $(srcdir)/defines.h
 	@echo

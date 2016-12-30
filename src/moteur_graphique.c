@@ -39,7 +39,8 @@ Menu barreEtat =	{.positionVert = HAUTEUR_FENETRE - NB_TILES_BARRE_ETAT * HAUTEU
 					 .tailleHorizCourante = NB_TILES_LARG - 2,
 					 .texte = L"   NOMJOUEUR \1   Niv 00 000/000 PV",
 					 .nbCharsArendre = LONG_TEXTE_MENU - 1}; // On rend le texte instantané.
-					 
+
+				 
 
 void initialiserGraphismes(void) {
 	
@@ -65,21 +66,31 @@ void initialiserGraphismes(void) {
 		FATALERROR(SDL_GetError(), ERREUR_CREATION_FENETRE)
 	}
 	
+	SDL_WarpMouseInWindow(pFenetre, LARGEUR_FENETRE / 2, HAUTEUR_FENETRE / 2);
+	
 	LOGGER("Création du rendu...")
-	// On tente de créer le SDL_Renderer
-	pRendu = SDL_CreateRenderer(pFenetre, -1, FLAG(DESACTIVER_ACCEL_GPU) ? SDL_RENDERER_SOFTWARE : SDL_RENDERER_ACCELERATED);
-	// NULL signifie une erreur. On va ptêtre éviter la redite :)
-	if(pRendu == NULL) {
-		// Pour les cas où l'accélération matérielle n'est pas supportée.
-		pRendu = SDL_CreateRenderer(pFenetre, -1, SDL_RENDERER_SOFTWARE);
-		if(pRendu == NULL) {
+	
+	// On tente de créer le SDL_Renderer.
+	pRendu = SDL_CreateRenderer(pFenetre, -1, SDL_RENDERER_TARGETTEXTURE | (FLAG(DESACTIVER_ACCEL_GPU) ? SDL_RENDERER_SOFTWARE : SDL_RENDERER_ACCELERATED));
+	if(!pRendu) {
+		pRendu = SDL_CreateRenderer(pFenetre, -1, SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_SOFTWARE);
+		if(!pRendu) {
 			ERROR("Le rendu n'a pas pu être créé !")
 			FATALERROR(SDL_GetError(), ERREUR_CREATION_RENDU)
 		} else {
 			WARN("L'accélération matérielle n'est pas supportée. Un rendu logiciel est utilisé.")
-			fprintf(fichierLog, SDL_GetError());
+			WARN(SDL_GetError())
 		}
 	}
+	
+	framebuffer = SDL_CreateTexture(pRendu, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, LARGEUR_FENETRE, HAUTEUR_FENETRE);
+	if(!framebuffer) {
+		ERROR("Impossible de créer le framebuffer.")
+		FATALERROR(SDL_GetError(), ERREUR_CREATION_RENDU)
+	}
+	
+	SDL_SetRenderTarget(pRendu, framebuffer);
+	
 	LOGGER("Rendu créé.")
 #ifndef PRODUCTION
 	#define COULEUR_FOND	255, 0, 0
@@ -107,6 +118,10 @@ void initialiserGraphismes(void) {
 // Veuillez (sauf si le contraire est requis) nettoyer dans l'ordre inverse du chargement !
 void nettoyerGraphismes(void) {
 	dechargerImage(&imgTiles);
+	
+	if(framebuffer) {
+		SDL_DestroyTexture(framebuffer);
+	}
 	
 	if(pRendu) {
 		SDL_DestroyRenderer(pRendu);
@@ -248,6 +263,11 @@ void rendrePresent(void) {
 		}
 	}
 	SDL_RenderPresent(pRendu);
+	
+	SDL_SetRenderTarget(pRendu, NULL);
+	SDL_RenderCopy(pRendu, framebuffer, NULL, NULL);
+	SDL_RenderPresent(pRendu);
+	SDL_SetRenderTarget(pRendu, framebuffer);
 }
 
 void afficherRect(const SDL_Rect* rectSource, unsigned int positionVert, unsigned int positionHoriz) {

@@ -54,26 +54,6 @@ Commande selectEcranTitre							= CMD_AJOUTER_MENU(&selectContEcranTitre, 0, NUL
 
 Commande nouvelleEcranTitre							= CMD_OCTET(&dernierChoixMenu, NB_SAUVEGARDES, OCTET_INT, &chargerSauvEcranTitre);
 
-void ecrireVitesseTexte(Commande* commande) {
-	commande->compteur = 0;
-	
-	if(dernierChoixMenu != 3) {
-		vitesseTexte = dernierChoixMenu * 2 + 1;
-	}
-}
-Commande modifierVitesseTexte						= CMD_FONCTION(ecrireVitesseTexte, NULL);
-Commande* commandesVitesseTexte[4]					= {NULL, NULL, NULL, NULL};
-wchar_t optionsVitesseTexte[4][LONG_NOM_OPTIONS]	= {L"Rapide", L"Moyen", L"Lent", L"Annuler"};
-Commande choisirVitesseTexte						= CMD_OPTIONS(commandesVitesseTexte, optionsVitesseTexte, 4, &modifierVitesseTexte);
-Menu menuVitesseTexte								= MENU(224, (NB_TILES_LARG - 12) * LARGEUR_TILE / 2, 4, 10, &choisirVitesseTexte);
-Commande selectionnerVitesseTexte					= CMD_AJOUTER_MENU(&menuVitesseTexte, 0, NULL);
-Commande* commandesOptionsModif[2]					= {&selectionnerVitesseTexte, NULL};
-// J'avoue. J'ai fait exprès, pour le nom. :D
-wchar_t optionsOptionsModif[2][LONG_NOM_OPTIONS]	= {L"Vitesse du texte", L"Annuler"};
-Commande selectionOptionAmodifier					= CMD_OPTIONS(commandesOptionsModif, optionsOptionsModif, 2, NULL);
-Menu menuOptions									= MENU(272, (NB_TILES_LARG - 22) * LARGEUR_TILE / 2, 2, 20, &selectionOptionAmodifier);
-Commande ajouterMenuOptions							= CMD_AJOUTER_MENU(&menuOptions, 0, NULL);
-
 Commande* commandesEcranTitre[2]					= {&selectEcranTitre, &nouvelleEcranTitre};
 wchar_t optionsEcranTitre[2][LONG_NOM_OPTIONS]		= {L"  CONTINUER\1", L"NOUVELLE PARTIE"};
 Commande commandeEcranTitre0						= CMD_OPTIONS(commandesEcranTitre, optionsEcranTitre, 2, &commandeEcranTitre0);

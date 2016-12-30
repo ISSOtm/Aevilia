@@ -915,6 +915,7 @@ typedef struct {
 typedef enum {
 	OBJ_DEBUG,
 	ZAP_JOUET,
+	PAD_OPTIONS,
 	
 	NB_OBJETS // Nombre de types d'objets implémentés.
 } IDobjet;
